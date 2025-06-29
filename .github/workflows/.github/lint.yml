@@ -1,0 +1,40 @@
+name: Simple Linting Demo
+
+on:
+  push:
+    branches:
+      - main # This workflow runs on pushes to the main branch
+
+jobs:
+  lint_python:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9' # Or your preferred Python version
+    - name: Install flake8
+      run: pip install flake8
+    - name: Run flake8
+      run: |
+        flake8 . --max-line-length=79 # Ensure it checks the whole repo, and enforces 79 char limit
+    - name: Report success for Python linting
+      run: echo "✅ Python linting completed successfully!"
+
+  lint_javascript: # Renamed from lint_function_js for clarity, if you had JS files
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '16' # Or your preferred Node.js version
+    - name: Install JSHint (or ESLint if you prefer)
+      run: npm install -g jshint # Or npm install -g eslint
+    - name: Run JSHint on JS files
+      # Make sure this path is correct for where your JS files would be
+      # If you don't have JS files, you can remove this job
+      run: jshint server/djangoproj/static/js/ # Adjust this path if your JS is elsewhere
+    - name: Report success for JavaScript linting
+      run: echo "✅ JavaScript linting completed successfully!"
