@@ -1,0 +1,42 @@
+name: CI/CD Linting Check
+
+on:
+  push:
+    branches:
+      - main # This workflow runs on pushes to the main branch
+
+jobs:
+  lint_python:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9' # You can adjust this Python version if needed
+    - name: Install flake8
+      run: pip install flake8
+    - name: Run flake8
+      run: |
+        # Adjust this path if your Django project is in a different subdirectory
+        # For your case, it should be: flake8 ./server/djangoproj --max-line-length=79
+        flake8 . --max-line-length=79 --exclude=env,.venv # Exclude common virtual env folders
+    - name: Report success for Python linting
+      run: echo "✅ Python linting completed successfully!"
+
+  lint_javascript:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '16' # You can adjust this Node.js version if needed
+    - name: Install JSHint
+      run: npm install -g jshint
+    - name: Run JSHint on JS files
+      # IMPORTANT: Adjust this path to where your JavaScript files are located
+      # For example, if they are in 'server/djangoproj/static/js/'
+      run: jshint server/djangoproj/static/js/
+    - name: Report success for JavaScript linting
+      run: echo "✅ JavaScript linting completed successfully!"
